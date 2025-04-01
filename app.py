@@ -34,32 +34,20 @@ def plot_heatmap(data, title):
     return fig
 
 # Dash app setup
+# Create the Dash app
 app = dash.Dash(__name__)
+server = app.server  # 🔥 This is required for Gunicorn to work on Render
+
 app.layout = html.Div([
-    html.H1("📊 Monthly Correlation Heatmaps", style={'textAlign': 'center'}),
-    
-    dcc.Dropdown(
-        id="group_selector",
-        options=[
-            {"label": "Group 1", "value": "group1"},
-            {"label": "Group 2", "value": "group2"}
-        ],
-        value="group1",
-        clearable=False,
-        style={"width": "50%", "margin": "auto"}
-    ),
-    
-    dcc.Graph(id="heatmap")
+    html.H1("📊 Stock Correlation Heatmaps", style={"text-align": "center"}),
+
+    html.H3("Group 1: First Half of Stocks"),
+    dcc.Graph(figure=create_heatmap(monthly_corr, group1, "Monthly Correlation - Group 1")),
+
+    html.H3("Group 2: Second Half of Stocks"),
+    dcc.Graph(figure=create_heatmap(monthly_corr, group2, "Monthly Correlation - Group 2")),
 ])
 
-@app.callback(
-    Output("heatmap", "figure"),
-    Input("group_selector", "value")
-)
-def update_heatmap(selected_group):
-    data = df_filtered[group1] if selected_group == "group1" else df_filtered[group2]
-    title = f"📊 Monthly Correlation Heatmap ({selected_group.replace('group', 'Group ')})"
-    return plot_heatmap(data, title)
-
+# Run the server locally
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=8080)
