@@ -5,11 +5,11 @@ from dash import dcc, html
 from dash.dependencies import Input, Output
 
 # Load the monthly correlation data
-df = pd.read_csv("Monthly_Correlation.csv", index_col=0, parse_dates=True)
-df.index = pd.to_datetime(df.index.astype(str))  # Ensure index is datetime
+monthly_corr = pd.read_csv("Monthly_Correlation.csv", index_col=0, parse_dates=True)
+monthly_corr.index = pd.to_datetime(df.index.astype(str))  # Ensure index is datetime
 
 # Filter data from March 2024 onwards
-df_filtered = df[df.index >= "2024-03"]
+df_filtered = monthly_corr[monthly_corr.index >= "2024-03"]
 
 # Split columns into two groups
 stocks = list(df_filtered.columns)
