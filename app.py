@@ -40,13 +40,20 @@ app = dash.Dash(__name__)
 server = app.server  # 🔥 This is required for Gunicorn to work on Render
 
 app.layout = html.Div([
-    html.H1("📊 Stock Correlation Heatmaps", style={"text-align": "center"}),
-
-    html.H3("Group 1: First Half of Stocks"),
-    dcc.Graph(figure=create_heatmap(monthly_corr, group1, "Monthly Correlation - Group 1")),
-
-    html.H3("Group 2: Second Half of Stocks"),
-    dcc.Graph(figure=create_heatmap(monthly_corr, group2, "Monthly Correlation - Group 2")),
+    html.H1("📊 Monthly Correlation Heatmaps", style={'textAlign': 'center'}),
+    
+    dcc.Dropdown(
+        id="group_selector",
+        options=[
+            {"label": "Group 1", "value": "group1"},
+            {"label": "Group 2", "value": "group2"}
+        ],
+        value="group1",
+        clearable=False,
+        style={"width": "50%", "margin": "auto"}
+    ),
+    
+    dcc.Graph(id="heatmap")
 ])
 
 # Run the server locally
