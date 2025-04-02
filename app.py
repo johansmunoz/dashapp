@@ -43,10 +43,10 @@ app.layout = html.Div([
     html.H1("📊 Stock Correlation Heatmaps", style={"text-align": "center"}),
 
     html.H3("Group 1: First Half of Stocks"),
-    dcc.Graph(figure=plot_heatmap(monthly_corr, group1, "Monthly Correlation - Group 1")),
+    dcc.Graph(figure=create_heatmap(monthly_corr, group1, "Monthly Correlation - Group 1")),
 
     html.H3("Group 2: Second Half of Stocks"),
-    dcc.Graph(figure=plot_heatmap(monthly_corr, group2, "Monthly Correlation - Group 2")),
+    dcc.Graph(figure=create_heatmap(monthly_corr, group2, "Monthly Correlation - Group 2")),
 ])
 
 # Run the server locally
