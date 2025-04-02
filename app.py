@@ -17,14 +17,15 @@ midpoint = len(stocks) // 2
 group1 = stocks[:midpoint]
 group2 = stocks[midpoint:]
 
-def plot_heatmap(data, title):
+def create_heatmap(corr_data, group, title):
     fig = px.imshow(
-        data.T,  # Transpose for better layout
+        corr_data[group].T,  # Transpose for better view
         labels=dict(x="Month", y="Stock", color="Correlation"),
         title=title,
         color_continuous_scale="RdBu_r",
         aspect="auto",
     )
+
     fig.update_layout(
         autosize=False,
         width=1000,
