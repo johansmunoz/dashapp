@@ -58,12 +58,11 @@ app.layout = html.Div([
 
 @app.callback(
     Output("heatmap", "figure"),
-    Input("group_selector", "value")
+    [Input("group_selector", "value")]
 )
 def update_heatmap(selected_group):
-    data = df_filtered[group1] if selected_group == "group1" else df_filtered[group2]
-    title = f"📊 Monthly Correlation Heatmap ({selected_group.replace('group', 'Group ')})"
-    return plot_heatmap(data, title)
+    selected_stocks = group1 if selected_group == "group1" else group2
+    return create_heatmap(df[selected_stocks], f"Monthly Correlation - {selected_group.capitalize()}")
 
 # Run the server locally
 if __name__ == "__main__":
