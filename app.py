@@ -51,7 +51,10 @@ app.layout = html.Div([
         style={"width": "50%", "margin": "auto"}
     ),
     
-    dcc.Graph(id="heatmap")
+    html.Div(
+        dcc.Graph(id="heatmap"),
+        style={"display": "flex", "justifyContent": "center"}
+    )
 ])
 
 @app.callback(
