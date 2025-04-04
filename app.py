@@ -11,6 +11,10 @@ df.index = pd.to_datetime(df.index.astype(str))  # Ensure index is datetime
 # Filter data from March 2024 onwards
 df_filtered = df[df.index >= "2024-03"]
 
+#delete the column "Fecha"
+if "Fecha" in df.columns:
+    df = df.drop(columns=["Fecha"])
+
 # Split columns into two groups
 stocks = list(df_filtered.columns)
 midpoint = len(stocks) // 2
