@@ -12,8 +12,8 @@ df.index = pd.to_datetime(df.index.astype(str))  # Ensure index is datetime
 df_filtered = df[df.index >= "2024-03"]
 
 #delete the column "Fecha"
-if "Fecha" in df.columns:
-    df = df.drop(columns=["Fecha"])
+if "Fecha" in df_filtered.columns:
+    df_filtered = df_filtered.drop(columns=["Fecha"])
 
 # Split columns into two groups
 stocks = list(df_filtered.columns)
