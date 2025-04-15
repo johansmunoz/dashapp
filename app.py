@@ -112,7 +112,7 @@ def update_heatmap(selected_group):
     data = df_filtered[group1] if selected_group == "group1" else df_filtered[group2]
     title = f"📊 Monthly Correlation Heatmap ({selected_group.replace('group', 'Group ')})"
     return plot_heatmap(data, title)
-
+    
 # Run the server locally
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
