@@ -176,14 +176,15 @@ def update_rolling_output(selected_window):
     corr_series = rolling_df[selected_window].dropna().sort_values(ascending=False)
 
     fig = px.bar(
-        x=corr_series.index,
-        y=corr_series.values,
-        labels={"x": "Stock", "y": f"Correlation ({selected_window})"},
-        title=f"Rolling Correlation with COLCAP ({selected_window})",
-        color=corr_series.values,
-        color_continuous_scale="RdBu",
-        range_color=[-1, 1]
-    )
+    x=corr_series.index,
+    y=corr_series.values,
+    labels={"x": "Stock", "y": f"Correlation ({selected_window})"},
+    title=f"Rolling Correlation with COLCAP ({selected_window})",
+    color=corr_series.index,  # Make each stock have a unique color
+    color_discrete_sequence=px.colors.qualitative.Safe  # Or Vibrant, Dark2, Set3, etc.
+)
+
+
     fig.update_layout(xaxis_tickangle=-45, height=500)
 
     table = dash_table.DataTable(
@@ -235,13 +236,13 @@ def download_file(file_type, fmt):
         buffer = df.to_csv(index=False if file_type == "historical" else True)
         mimetype = "text/csv"
         filename = f"{file_type}_correlation.csv"
-    elif fmt == "excel":
-        output = io.BytesIO()
-        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
-            df.to_excel(writer, index=False if file_type == "historical" else True)
-        buffer = output.getvalue()
-        mimetype = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        filename = f"{file_type}_correlation.xlsx"
+    # elif fmt == "excel":
+    #     output = io.BytesIO()
+    #     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+    #         df.to_excel(writer, index=False if file_type == "historical" else True)
+    #     buffer = output.getvalue()
+    #     mimetype = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    #     filename = f"{file_type}_correlation.xlsx"
     else:
         return Response("Invalid format", status=400)
 
@@ -251,7 +252,6 @@ def download_file(file_type, fmt):
         mimetype=mimetype,
         headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
-
 # Run the server locally
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
