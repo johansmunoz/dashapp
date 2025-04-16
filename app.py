@@ -245,11 +245,13 @@ def download_file(file_type, fmt):
     else:
         return Response("Invalid format", status=400)
 
+    # Correct the Content-Disposition header based on format
     return Response(
         buffer,
         mimetype=mimetype,
         headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
+
 # Run the server locally
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
