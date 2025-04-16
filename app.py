@@ -11,6 +11,8 @@ from flask import Response  # Import Flask's Response
 monthly_df = pd.read_csv("Monthly_Correlation.csv", index_col=0, parse_dates=True)
 monthly_df.index = pd.to_datetime(monthly_df.index.astype(str))
 monthly_df = monthly_df[monthly_df.index >= "2024-03"]
+monthly_df.columns = monthly_df.columns.str.replace("_Precio cierre", "", regex=False)
+
 if "Fecha" in monthly_df.columns:
     monthly_df = monthly_df.drop(columns=["Fecha"])
 
@@ -48,6 +50,7 @@ df_corr["Stock"] = df_corr["Stock"].str.replace("_Precio cierre", "", regex=Fals
 # Load rolling correlation CSV
 rolling_df = pd.read_csv("Rolling_Correlations.csv", index_col=0)
 rolling_df = rolling_df.sort_index()
+rolling_df.index = rolling_df.index.str.replace("_Precio cierre", "", regex=False)
 
 # App layout
 app = dash.Dash(__name__)
@@ -86,7 +89,7 @@ app.layout = html.Div([
                 labels={"Correlation": "Correlation Coefficient", "Stock": "Stock"}
             ).update_layout(
                 yaxis=dict(autorange="reversed"),
-                height=800,
+                height=1400,
                 xaxis=dict(tickformat=".2f")),
                 style={"margin": "0 auto", "width": "90%"}
             ),
