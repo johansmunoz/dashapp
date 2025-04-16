@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import plotly.express as px
-from dash import Dash, dcc, html, Input, Output
+from dash import Dash, dcc, html, Input, Output, dash_table
 import dash
 
 # Load the monthly correlation data
@@ -18,8 +18,11 @@ group1 = stocks[:midpoint]
 group2 = stocks[midpoint:]
 
 def plot_heatmap(data, title):
+    # Calculate average correlation per stock and sort in descending order
+    avg_corr = data.mean().sort_values(ascending=True)  # Now descending in visual (high to low)
+    sorted_data = data[avg_corr.index]
     fig = px.imshow(
-        data.T,
+        sorted_data.T,
         labels=dict(x="Month", y="Stock", color="Correlation"),
         title=title,
         color_continuous_scale="RdBu_r",
@@ -120,7 +123,7 @@ def update_heatmap(selected_group):
     Input("window_selector", "value")
 )
 def update_rolling_output(selected_window):
-    corr_series = rolling_df[selected_window].dropna()
+    corr_series = rolling_df[selected_window].dropna().sort_values(ascending=False)
 
     fig = px.bar(
         x=corr_series.index,
@@ -133,18 +136,27 @@ def update_rolling_output(selected_window):
     )
     fig.update_layout(xaxis_tickangle=-45, height=500)
 
-    table = html.Table([
-        html.Thead([
-            html.Tr([html.Th("Stock"), html.Th(f"Correlation ({selected_window})")])
-        ]),
-        html.Tbody([
-            html.Tr([html.Td(stock), html.Td(round(corr, 4))])
-            for stock, corr in corr_series.items()
-        ])
-    ])
+    table = dash_table.DataTable(
+        columns=[
+            {"name": "Stock", "id": "Stock"},
+            {"name": f"Correlation ({selected_window})", "id": "Correlation"}
+        ],
+        data=[{"Stock": stock, "Correlation": round(corr, 4)} for stock, corr in corr_series.items()],
+        style_cell={"textAlign": "center", "padding": "8px"},
+        style_header={"fontWeight": "bold", "backgroundColor": "#f8f8f8"},
+        style_table={"overflowX": "auto"},
+        style_data_conditional=[
+            {
+                "if": {"column_id": "Correlation"},
+                "backgroundColor": "#f0f8ff",
+            }
+        ],
+        page_size=20,
+        sort_action="native",
+        filter_action="native",
+    )
 
     return fig, table
-
 # Run the server locally
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
