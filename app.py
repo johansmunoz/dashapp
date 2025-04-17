@@ -57,63 +57,70 @@ app = dash.Dash(__name__)
 server = app.server
 
 app.layout = html.Div([
-    html.H1("\ud83d\udcc8 Correlation Visualizations", style={'textAlign': 'center'}),
+    html.H1("📈 Correlation Visualizations", style={'textAlign': 'center'}),
 
     dcc.Tabs([
         dcc.Tab(label="Monthly Heatmap", children=[
-            html.Br(),
-            dcc.Dropdown(
-                id="group_selector",
-                options=[
-                    {"label": "Group 1", "value": "group1"},
-                    {"label": "Group 2", "value": "group2"}
-                ],
-                value="group1",
-                clearable=False,
-                style={"width": "50%", "margin": "auto"}
-            ),
-            html.Div(dcc.Graph(id="heatmap"), style={"display": "flex", "justifyContent": "center"})
+            html.Div([
+                html.Br(),
+                dcc.Dropdown(
+                    id="group_selector",
+                    options=[
+                        {"label": "Group 1", "value": "group1"},
+                        {"label": "Group 2", "value": "group2"}
+                    ],
+                    value="group1",
+                    clearable=False,
+                    style={"width": "100%", "maxWidth": "600px", "margin": "0 auto"}
+                ),
+                dcc.Graph(id="heatmap", style={"width": "100%", "maxWidth": "1200px", "margin": "auto"})
+            ])
         ]),
 
         dcc.Tab(label="Historical Correlation Bar Chart", children=[
             html.Br(),
-            dcc.Graph(figure=px.bar(
-                df_corr,
-                x="Correlation",
-                y="Stock",
-                orientation="h",
-                title="\ud83d\udcca Historical Correlation with COLCAP since 2020",
-                color="Correlation",
-                color_continuous_scale="RdBu_r",
-                range_color=[-1, 1],
-                labels={"Correlation": "Correlation Coefficient", "Stock": "Stock"}
-            ).update_layout(
-                yaxis=dict(autorange="reversed"),
-                height=1400,
-                xaxis=dict(tickformat=".2f")),
-                style={"margin": "0 auto", "width": "90%"}
+            dcc.Graph(
+                figure=px.bar(
+                    df_corr,
+                    x="Correlation",
+                    y="Stock",
+                    orientation="h",
+                    title="📊 Historical Correlation with COLCAP since 2020",
+                    color="Correlation",
+                    color_continuous_scale="RdBu_r",
+                    range_color=[-1, 1],
+                    labels={"Correlation": "Correlation Coefficient", "Stock": "Stock"}
+                ).update_layout(
+                    yaxis=dict(autorange="reversed"),
+                    xaxis=dict(tickformat=".2f"),
+                    height=40 * len(df_corr)  # 🆕 Allocate 40px per stock
+                ),
+                style={"margin": "0 auto", "width": "100%", "maxWidth": "1200px"}
             ),
+
             html.H3("Correlation Table", style={"textAlign": "center"}),
-            dash_table.DataTable(
-                id="historical_table",
-                columns=[
-                    {"name": "Stock", "id": "Stock"},
-                    {"name": "Correlation", "id": "Correlation"}
-                ],
-                data=df_corr.to_dict("records"),
-                style_cell={"textAlign": "center", "padding": "8px"},
-                style_header={"fontWeight": "bold", "backgroundColor": "#f8f8f8"},
-                style_table={"overflowX": "auto"},
-                style_data_conditional=[
-                    {
-                        "if": {"column_id": "Correlation"},
-                        "backgroundColor": "#f0f8ff",
-                    }
-                ],
-                page_size=20,
-                sort_action="native",
-                filter_action="native",
-            ),
+            html.Div([
+                dash_table.DataTable(
+                    id="historical_table",
+                    columns=[
+                        {"name": "Stock", "id": "Stock"},
+                        {"name": "Correlation", "id": "Correlation"}
+                    ],
+                    data=df_corr.to_dict("records"),
+                    style_cell={"textAlign": "center", "padding": "8px"},
+                    style_header={"fontWeight": "bold", "backgroundColor": "#f8f8f8"},
+                    style_table={"overflowX": "auto"},
+                    style_data_conditional=[
+                        {
+                            "if": {"column_id": "Correlation"},
+                            "backgroundColor": "#f0f8ff",
+                        }
+                    ],
+                    page_size=20,
+                    sort_action="native",
+                    filter_action="native",
+                )
+            ], style={"width": "100%", "maxWidth": "1200px", "margin": "auto"}),
             html.Br(),
             html.Div([
                 html.Label("Select format: "),
@@ -128,7 +135,7 @@ app.layout = html.Div([
                 ),
                 html.Br(),
                 html.A("Download Historical Data", id="download_link_hist", href="/download/historical/csv", download="Historical_Correlation.csv", target="_blank", style={"display": "block", "textAlign": "center"})
-            ])
+            ], style={"textAlign": "center"})
         ]),
 
         dcc.Tab(label="Rolling Correlation with COLCAP", children=[
@@ -138,11 +145,11 @@ app.layout = html.Div([
                 options=[{"label": label, "value": label} for label in rolling_df.columns],
                 value="252d",
                 clearable=False,
-                style={"width": "50%", "margin": "auto"}
+                style={"width": "100%", "maxWidth": "600px", "margin": "0 auto"}
             ),
-            dcc.Graph(id="bar_chart"),
+            dcc.Graph(id="bar_chart", style={"width": "100%", "maxWidth": "1200px", "margin": "auto"}),
             html.H3("Correlation Table", style={"textAlign": "center"}),
-            html.Div(id="correlation_table", style={"width": "80%", "margin": "auto"}),
+            html.Div(id="correlation_table", style={"width": "100%", "maxWidth": "1200px", "margin": "auto"}),
             html.Br(),
             html.Div([
                 html.Label("Select format: "),
@@ -157,10 +164,11 @@ app.layout = html.Div([
                 ),
                 html.Br(),
                 html.A("Download Rolling Data", id="download_link_roll", href="/download/rolling/csv", download="Rolling_Correlations.csv", target="_blank", style={"display": "block", "textAlign": "center"})
-            ])
+            ], style={"textAlign": "center"})
         ])
     ])
-])
+], style={"padding": "1rem"})
+
 
 @app.callback(
     Output("heatmap", "figure"),
