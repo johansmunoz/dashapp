@@ -74,6 +74,11 @@ app.layout = html.Div([
                     style={"width": "100%", "maxWidth": "600px", "margin": "0 auto"}
                 ),
                 dcc.Graph(id="heatmap", style={"width": "100%", "maxWidth": "1200px", "margin": "auto"})
+                html.P(
+                    "This heatmap shows the monthly correlation between each stock and the COLCAP index since March 2024. "
+                    "Red indicates a negative correlation, while blue shows a positive one. Use the dropdown to view different stock groups.",
+                    style={"textAlign": "center", "maxWidth": "900px", "margin": "auto"}
+                ),
             ])
         ]),
 
