@@ -102,9 +102,12 @@ app.layout = html.Div([
                     labels={"Correlation": "Correlation Coefficient", "Stock": "Stock"}
                 ).update_layout(
                     yaxis=dict(autorange="reversed"),
-                    xaxis=dict(tickformat=".2f"),
-                    height=40 * len(df_corr)  # 🆕 Allocate 40px per stock
+                    height=1000,  # Increased from 800 to 1000
+                    xaxis=dict(tickformat=".2f")
                 ),
+                style={"margin": "0 auto", "width": "90%", "height": "1000px"}  # Add fixed height here
+            ),
+
                 style={"margin": "0 auto", "width": "100%", "maxWidth": "1200px"}
             ),
 
