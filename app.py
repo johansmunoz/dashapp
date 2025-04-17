@@ -75,7 +75,7 @@ app.layout = html.Div([
                 ),
                 html.P(
                     "This heatmap shows the monthly correlation between each stock and the COLCAP index since March 2024. "
-                    "Red indicates a negative correlation, while blue shows a positive one. Use the dropdown to view different stock groups.",
+                    "Red indicates a positive correlation, while blue shows a negative one. Use the dropdown to view different stock groups.",
                     style={"textAlign": "center", "maxWidth": "900px", "margin": "auto"}
                 ),
                 dcc.Graph(id="heatmap", style={"width": "100%", "maxWidth": "1200px", "margin": "auto"})
@@ -84,6 +84,11 @@ app.layout = html.Div([
 
         dcc.Tab(label="Historical Correlation Bar Chart", children=[
             html.Br(),
+            html.P(
+                "This bar chart displays the historical correlation between each stock and the COLCAP index, calculated using data from 2020 onward. "
+                "A correlation close to 1 means the stock moves in sync with the index, while values closer to -1 indicate opposite movement.",
+                style={"textAlign": "center", "maxWidth": "900px", "margin": "auto"}
+            ),
             dcc.Graph(
                 figure=px.bar(
                     df_corr,
@@ -145,6 +150,11 @@ app.layout = html.Div([
 
         dcc.Tab(label="Rolling Correlation with COLCAP", children=[
             html.Br(),
+            html.P(
+                "This section shows the rolling correlation between each stock and the COLCAP index over different time windows (e.g., 252 days ≈ 1 year). "
+                "Rolling correlation helps track how relationships evolve over time.",
+                style={"textAlign": "center", "maxWidth": "900px", "margin": "auto"}
+            ),
             dcc.Dropdown(
                 id="window_selector",
                 options=[{"label": label, "value": label} for label in rolling_df.columns],
