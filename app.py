@@ -199,10 +199,10 @@ def update_rolling_output(selected_window):
     fig.update_layout(xaxis_tickangle=-45, height=500)
 
     table = dash_table.DataTable(
-        columns=[
-            {"name": f"Correlation ({selected_window})", "id": "Correlation"},
-            {"name": "Stock", "id": "Stock"}
-        ],
+    columns=[
+        {"name": "Stock", "id": "Stock"},
+        {"name": f"Correlation ({selected_window})", "id": "Correlation"}
+    ],
         data=[{"Stock": stock, "Correlation": round(corr, 4)} for stock, corr in corr_series.items()],
         style_cell={"textAlign": "center", "padding": "8px"},
         style_header={"fontWeight": "bold", "backgroundColor": "#f8f8f8"},
